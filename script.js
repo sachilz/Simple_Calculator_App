@@ -9,12 +9,30 @@ buttons.forEach((item) => {
       let string = display.innerText.toString();
       display.innerText = string.substr(0, string.length - 1);
     } else if (display.innerText != "" && item.id == "equal") {
-      display.innerText = eval(display.innerText);
+      // Replace 'x' with '*' for evaluation and remove spaces
+      let expression = display.innerText.replace(/x/g, '*').replace(/\s/g, '');
+      display.innerText = eval(expression);
     } else if (display.innerText == "" && item.id == "equal") {
       display.innerText = "Empty!";
       setTimeout(() => (display.innerText = ""), 2000);
     } else {
-      display.innerText += item.id;
+      // Check if the button is an operator (excluding clear, backspace, equal, and parentheses)
+      const operators = ['+', '-', 'x', '/'];
+      if (operators.includes(item.id)) {
+        // Add spaces around operators
+        display.innerText += ` ${item.id} `;
+      } else {
+        // For numbers and parentheses
+        const currentText = display.innerText;
+        const lastChar = currentText.slice(-1);
+        
+        // If the last character is an operator and we're adding a number, add a space first
+        if (operators.includes(lastChar) && !isNaN(item.id)) {
+          display.innerText += ` ${item.id}`;
+        } else {
+          display.innerText += item.id;
+        }
+      }
     }
   };
 });
